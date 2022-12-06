@@ -1,30 +1,12 @@
-priority = 0
-with open ('input.txt') as file:
-	rucksack = file.read().strip().split('\n')
-for rs in rucksack:
-	l = len(rs)
-	left = rs[:l // 2]
-	right = rs[l // 2:]
-	for item in left:
-		if item in right:
-			if item.islower():
-				value = ord(item) - 96
-			else:
-				value = ord(item) - 64 + 26
-	priority += value
-print('prio first task is:', priority) 
-
-priority2 = i = value = 0
-while i < len(rucksack):
-	bag1 = rucksack[i]
-	bag2 = rucksack[i + 1]
-	bag3 = rucksack[i + 2]
-	for badge in bag1:
-		if badge in bag2 and badge in bag3:
-			if badge.islower():
-				value = ord(badge) - 96
-			else:
-				value = ord(badge) - 64 + 26
-	priority2 += value
-	i += 3
-print('prio second task is:', priority2) 
+count = count2 =0
+with open ('input4.txt', 'r') as file:
+	pairs = file.read().strip().split('\n')
+for elf in pairs:
+	first_range, second_range = elf.split(',')
+	start_a, end_a = map(int, first_range.split('-'))
+	start_b, end_b = map(int, second_range.split('-'))
+	if (start_a <= start_b and end_a >= end_b) or (start_b <= start_a and end_b >= end_a):
+		count+=1
+	if start_a in range (start_b, end_b + 1) or end_a in range (start_b, end_b + 1) or start_b in range (start_a, end_a + 1) or end_b in range (start_a, end_a + 1):
+		count2+=1
+print(count, count2)
