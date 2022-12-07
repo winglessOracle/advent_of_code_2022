@@ -31,7 +31,7 @@
 # print ("total", shape('input.txt', 'X', 'Y', 'Z') + win('input.txt'))
 
 #############################################################################################
-#First part short
+# First part short
 
 # total = shape = win =0 
 # with open ('input.txt') as f:
