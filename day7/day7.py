@@ -1,27 +1,44 @@
-cur_dir = total = step = count = 0
+cwd = root = {}
+stack = []
 
-stackedpath = [0]
-with open ('input.txt', 'r') as file:
-	lines = file.read().strip().split()
-for element in reversed(lines):
-	if element.isdigit():
-		cur_dir += int(element)
-		if count != 0:
-			stackedpath[count] += int(cur_dir)
-	
-	if element == "ls":
-		print (cur_dir)
-		if count != 0:
-			cur_dir += int(stackedpath[count])
-			stackedpath.pop()
-			count -= 1
-		if cur_dir <= 100000:
-			total += cur_dir
-		cur_dir = 0
+file = open('input.txt', 'r')
 
-	if element == "..":
-		stackedpath.append("..")
-		count += 1
-		print(stackedpath, count)
+for line in file:
+	line = line.strip()
+	if line [0] == "$":
+		if line [2] == "c":
+			dir = line[5:]
+			if dir == "/":
+				cwd = root
+				stack = []
+			elif dir == "..":
+				cwd = stack.pop()
+			else:
+				if dir not in cwd:
+					cwd[dir] = {}
+				stack.append(cwd)
+				cwd = cwd[dir]
+	else:
+		x, y, = line.split()
+		if x == "dir":
+			if y not in cwd:
+				cwd[y] = {}
+		else:
+			cwd[y] = int(x)
 
-print ("total:", total)
+print (root)
+
+def solve(dir = root):
+	if type(dir) == int:
+		return (dir, 0)
+	size = 0
+	total = 0
+	for child in dir.values():
+		s, t = solve(child)
+		size += s
+		total += t
+	if size <= 100000:
+		total += size
+	return (size, total)
+
+print(solve()[1])

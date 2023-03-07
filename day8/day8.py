@@ -1,82 +1,60 @@
 import numpy as np
 
-with open ('inputtemp.txt', 'r') as file:
-	lines = file.read().strip().split()
+# input in matrix
+grid = np.array([list(x.strip()) for x in open("input.txt", 'r')], int)
 
-grid = 
+# get number of rows and cols
+nrow, ncol = np.shape(grid)
 
-print(lines)
+# outside ring trees are visible
+visible_trees = (ncol * 2) + (nrow * 2) - 4 
+best_view_score = 1
 
-# grid = [list(map(int, list(line))) for line in lines]
+for r in range(1, nrow - 1): # loop through inside trees
+	for c in range(1, ncol - 1):
+		hight = grid[r, c]
+		#find trees to edge
+		trees_left = grid[r, :c]
+		trees_right = grid[r, c + 1:]
+		trees_up = grid[:r, c]
+		trees_down = grid[r + 1:, c]
+		# determine tallest tree in each direction.
+		tallest_tree_left = max(trees_left)
+		tallest_tree_right = max(trees_right)
+		tallest_tree_up = max(trees_up)
+		tallest_tree_down = max(trees_down)
+		# count trees visible from any direction id they are higher than other trees in that direction
+		if hight > tallest_tree_left or hight > tallest_tree_right or hight > tallest_tree_up or hight > tallest_tree_down: 
+			visible_trees += 1
+		
+		# count visible trees looking left
+		vis_tree_left = 0
+		for steps in range(len(trees_left)):
+			vis_tree_left += 1
+			if trees_left[len(trees_left) - 1 - steps] >= hight:
+				break
+		# count visible trees looking right
+		vis_tree_right = 0
+		for steps in range(len(trees_right)):
+			vis_tree_right += 1
+			if trees_right[steps] >= hight:
+				break
+		# count visible trees looking up
+		vis_tree_up = 0
+		for steps in range(len(trees_up)):
+			vis_tree_up += 1
+			if trees_up[len(trees_up) - 1 - steps] >= hight:
+				break
+		# count visible trees looking down
+		vis_tree_down = 0
+		for steps in range(len(trees_down)):
+			vis_tree_down += 1
+			if trees_down[steps] >= hight:
+				break
+		
+		view_score = vis_tree_left * vis_tree_right * vis_tree_up * vis_tree_down
+		if view_score > best_view_score:
+			best_view_score = view_score
 
-# c = len(grid[0])
-# r = len(grid)
-
-# trees = 0
-# for x in range(c)
-# 	for y in range(r)
-# 		hight = grid[x, y]
-
-# 		if y == 0 or np.amax(grid[x, :j]) < h:
-# 			trees += 1
-
-
-
-# #outside ring
-# ring = 2 * len(lines[0]) + 2 * len(lines) - 4
-# coordinates = []
-
-# # top
-# r = c = 1
-# while c < len(lines[0]) - 1:
-# 	while r < len(lines) - 1:
-# 		if lines[r][c] > lines[r - 1][c]:
-# 			coordinates.append((r,c))
-# 			r += 1
-# 		else:
-# 			r += 1
-# 	r = 1
-# 	c += 1
-
-# # left
-# r = c = 1
-# while r < len(lines) - 1:
-# 	while c < len(lines[0]) - 1:
-# 		if lines[r][c] > lines[r][c - 1]:
-# 			coordinates.append((r,c))
-# 			c += 1
-# 		else:
-# 			c += 1
-# 	c = 1
-# 	r += 1
-
-# # right
-# r = 1
-# c = len(lines[0]) - 1
-# while r < len(lines) - 1:
-# 	while c < 0:
-# 		if lines[r][c] > lines[r][c + 1]:
-# 			coordinates.append((r,c))
-# 			c -= 1
-# 		else:
-# 			c -= 1
-# 	c = len(lines[0]) - 1
-# 	r += 1
-
-# #bottom
-# r = len(lines) - 1
-# c = 1
-# while r < 0:
-# 	while c < len(lines[0]) - 1:
-# 		if lines[r][c] > lines[r + 1][c]:
-# 			coordinates.append((r,c))
-# 			r -= 1
-# 		else:
-# 			r -= 1
-# 	r = len(lines) - 1
-# 	c += 1
-
-# unique_coordinates = len(set(coordinates))
-# print (set(coordinates))
-# print ("outside ring trees = ", ring)
-# print ("visible trees = ", unique_coordinates + ring)
+print ("visible trees =", visible_trees)
+print ("best view score =", best_view_score )
